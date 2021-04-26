@@ -80,10 +80,13 @@ std::string logger::format(const std::string& fmt, ...)
     return buf;
 }
 
+static const char* strerror_result(int, const char* s) { return s; }
+static const char* strerror_result(const char* s, const char*) { return s; }
+
 std::string logger::err()
 {
     char buf[2048];
-    return strerror_r(errno, buf, sizeof(buf));
+    return strerror_result(strerror_r(errno, buf, sizeof(buf)), buf);
 }
 
 logger logger::error()
